@@ -1,0 +1,85 @@
+########################################################################
+
+# Sensitivity Analysis: Very Uninformative Student's t-Distribution
+
+########################################################################
+
+model
+
+{
+
+for(i in 1:n)
+
+{
+
+                            air_temperature[i] ~ dnorm(mu[i], inv.sigma2)
+
+                            mu[i] <- b[1] + b[2]*cloud[i] + b[3]*gsr[i] + b[4]*hum[i] + b[5]*sap[i] + b[6]*rain[i] + b[7]*snow[i] + b[8]*feb[i] + b[9]*mar[i] + b[10]*apr[i] + b[11]*may[i] + b[12]*jun[i] + b[13]*jul[i] + b[14]*aug[i] + b[15]*sep[i] + b[16]*oct[i] + b[17]*nov[i] + b[18]*dec[i] + b[19]*hom_1[i] + b[20]*hom_2[i] + b[21]*hom_3[i]
+
+}
+
+b[1] ~ dt(0, 0.0001, 6)
+
+b[2] ~ dt(0, 0.0001, 6)
+
+b[3] ~ dt(0, 0.0001, 6)
+
+b[4] ~ dt(0, 0.0001, 6)
+
+b[5] ~ dt(0, 0.0001, 6)
+
+b[6] ~ dt(0, 0.0001, 6)
+
+b[7] ~ dt(0, 0.0001, 6)
+
+b[8] ~ dt(0, 0.0001, 6)
+
+b[9] ~ dt(0, 0.0001, 6)
+
+b[10] ~ dt(0, 0.0001, 6)
+
+b[11] ~ dt(0, 0.0001, 6)
+
+b[12] ~ dt(0, 0.0001, 6)
+
+b[13] ~ dt(0, 0.0001, 6)
+
+b[14] ~ dt(0, 0.0001, 6)
+
+b[15] ~ dt(0, 0.0001, 6)
+
+b[16] ~ dt(0, 0.0001, 6)
+
+b[17] ~ dt(0, 0.0001, 6)
+
+b[18] ~ dt(0, 0.0001, 6)
+
+b[19] ~ dt(0, 0.0001, 6)
+
+b[20] ~ dt(0, 0.0001, 6)
+
+b[21] ~ dt(0, 0.0001, 6)
+
+inv.sigma2 ~ dgamma(0.0001, 0.0001)   # approximates the improper prior
+
+sigma2 <- 1/inv.sigma2
+
+sigma  <- sqrt(sigma2)
+
+
+              # prediction of new obs (ystar) using observed x.
+
+              for(i in 1:(n-1)/2)
+
+              {
+
+                             ystar[i] ~ dnorm(mu[i], inv.sigma2)
+
+                            pright[i] <- step(ystar[i] - air_temperature[i])
+
+                            pleft[i]  <- step(air_temperature[i] - ystar[i])
+
+              }
+
+
+}
