@@ -1,0 +1,86 @@
+########################################################################
+
+# Baseline Model
+
+########################################################################
+
+model
+
+{
+
+for(i in 1:n)
+
+{
+
+                            air_temperature[i] ~ dnorm(mu[i], inv.sigma2)
+
+                            mu[i] <- b[1] + b[2]*cloud[i] + b[3]*gsr[i] + b[4]*hum[i] + b[5]*sap[i] + b[6]*rain[i] + b[7]*snow[i] + b[8]*feb[i] + b[9]*mar[i] + b[10]*apr[i] + b[11]*may[i] + b[12]*jun[i] + b[13]*jul[i] + b[14]*aug[i] + b[15]*sep[i] + b[16]*oct[i] + b[17]*nov[i] + b[18]*dec[i] + b[19]*hom_1[i] + b[20]*hom_2[i] + b[21]*hom_3[i]
+
+}
+
+b[1] ~ dnorm(0, 0.000001)
+
+b[2] ~ dnorm(0, 0.000001)
+
+b[3] ~ dnorm(0, 0.000001)
+
+b[4] ~ dnorm(0, 0.000001)
+
+b[5] ~ dnorm(0, 0.000001)
+
+b[6] ~ dnorm(0, 0.000001)
+
+b[7] ~ dnorm(0, 0.000001)
+
+b[8] ~ dnorm(0.7, 0.1)
+
+b[9] ~ dnorm(3.7, 0.1)
+
+b[10] ~ dnorm(9.3, 0.1)
+
+b[11] ~ dnorm(13.6, 0.1)
+
+b[12] ~ dnorm(17, 0.1)
+
+b[13] ~ dnorm(20.9, 0.1)
+
+b[14] ~ dnorm(22.3, 0.1)
+
+b[15] ~ dnorm(18.6, 0.1)
+
+b[16] ~ dnorm(12.8, 0.1)
+
+b[17] ~ dnorm(7.5, 0.1)
+
+b[18] ~ dnorm(2.5, 0.1)
+
+b[19] ~ dnorm(0, 1)
+
+b[20] ~ dnorm(0, 1)
+
+b[21] ~ dnorm(0, 1)
+
+inv.sigma2 ~ dgamma(0.0001, 0.0001)   # approximates the improper prior
+
+sigma2 <- 1/inv.sigma2
+
+sigma  <- sqrt(sigma2)
+
+
+              # prediction of new obs (ystar) using observed x.
+
+              for(i in 1:(n-1)/2)
+
+              {
+
+                             ystar[i] ~ dnorm(mu[i], inv.sigma2)
+
+                            pright[i] <- step(ystar[i] - air_temperature[i])
+
+                            pleft[i]  <- step(air_temperature[i] - ystar[i])
+
+              }
+
+
+
+}
